@@ -1,11 +1,75 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:navigationIcon="@drawable/pic_titl"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:title="DuDu" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="42dp"
+        android:layout_below="@+id/toolbar"
+        android:background="#ff73ffdb">
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="漂亮MM"
+            android:textColor="#ff4268ff"
+            android:textSize="20.0dp" />
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="幽默DZ"
+            android:textColor="#ff4268ff"
+            android:textSize="20.0dp" />
+
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="无脑DI"
+            android:textColor="#ff4268ff"
+            android:textSize="20.0dp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/cursor"
+        android:layout_width="fill_parent"
+        android:layout_height="6dp"
+        android:scaleType="matrix"
+        android:layout_alignBottom="@+id/linearLayout1"
+        android:background="#ff73ffdb"
+        android:src="@drawable/pic_butt" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/cursor"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="119dp">
+
+    </android.support.v4.view.ViewPager>
 </RelativeLayout>

@@ -1,8 +1,22 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <!-- toolbar（actionbar）颜色 -->
+        <item name="colorPrimary">#ff73ffdb</item>
+        <!-- 状态栏颜色 -->
+        <item name="colorPrimaryDark">#ff91ffc9</item>
+        <!-- 窗口的背景颜色 -->
+        <item name="android:windowBackground">@android:color/white</item>
+
+        <item name="android:textColorPrimary">#ff4268ff</item>
+
+        <item name="colorControlNormal">#4876FF</item>
+
+
     </style>
+
+
 
 </resources>
