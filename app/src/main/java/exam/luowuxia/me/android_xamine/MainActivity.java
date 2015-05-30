@@ -69,8 +69,8 @@ public class MainActivity extends ActionBarActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    Intent updateIntent =new Intent(MainActivity.this, MyService.class);
-                    updateIntent.putExtra("url",apkURL);
+                    Intent updateIntent = new Intent(MainActivity.this, MyService.class);
+                    updateIntent.putExtra("url", apkURL);
                     startService(updateIntent);
                     break;
                 case 2:
@@ -200,8 +200,6 @@ public class MainActivity extends ActionBarActivity {
             animation.setFillAfter(true);// True:图片停在动画结束位置
             animation.setDuration(300);
             imageView.startAnimation(animation);
-            Toast.makeText(MainActivity.this, "您选择了" + mViewPager.getCurrentItem() + "页卡", Toast.LENGTH_SHORT).show();
-
             SetTeView();
 
             switch (arg0) {
@@ -305,7 +303,7 @@ public class MainActivity extends ActionBarActivity {
                             Log.e("===========>>>>>>>>>>>>", parser.nextText());
                         }
                         if ("apkURL".equals(nodeName)) {
-                           // Log.e("===========>>>>>>>>>>>>", parser.nextText());
+                            // Log.e("===========>>>>>>>>>>>>", parser.nextText());
                             apkURL = parser.nextText();
                         }
                         break;

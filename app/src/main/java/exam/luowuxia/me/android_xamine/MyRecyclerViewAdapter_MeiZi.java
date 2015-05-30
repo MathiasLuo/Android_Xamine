@@ -137,7 +137,7 @@ public class MyRecyclerViewAdapter_MeiZi extends RecyclerView.Adapter<RecyclerVi
             super(view);
 
             TextView tv = (TextView) view.findViewById(R.id.tt);
-            tv.setText("当前为第 "+currount +" 页"+"\n正在加载下一页");
+            tv.setText("当前第 "+currount +" 页"+"\n正在加载下一页......");
         }
 
     }

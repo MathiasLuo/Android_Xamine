@@ -135,7 +135,7 @@ public class MyRecyclerViewAdapter_Joke extends RecyclerView.Adapter<RecyclerVie
             super(view);
 
             TextView tv = (TextView) view.findViewById(R.id.tt);
-            tv.setText("当前为第 " + currount + " 页" + "\n正在加载下一页");
+            tv.setText("当前第 " + currount + " 页" + "\n正在加载下一页......");
         }
 
     }
