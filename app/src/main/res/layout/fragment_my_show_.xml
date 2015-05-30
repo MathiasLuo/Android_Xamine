@@ -17,7 +17,7 @@
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
         android:layout_marginTop="40dp"
-        android:hint="输入查询学生姓名" />
+        android:hint="输入查询或删除学生的姓名" />
 
 
     <LinearLayout

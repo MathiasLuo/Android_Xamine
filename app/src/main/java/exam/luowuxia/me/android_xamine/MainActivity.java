@@ -194,10 +194,10 @@ public class MainActivity extends ActionBarActivity {
         public void onPageSelected(int arg0) {
 
 
-            Animation animation = new TranslateAnimation(one * currIndex, one * arg0, 0, 0);//显然这个比较简洁，只有一行代码。
+            Animation animation = new TranslateAnimation(one * currIndex, one * arg0, 0, 0);
             Log.e("================>>>>>", one + "\n" + two);
             currIndex = arg0;
-            animation.setFillAfter(true);// True:图片停在动画结束位置
+            animation.setFillAfter(true);
             animation.setDuration(300);
             imageView.startAnimation(animation);
             SetTeView();
