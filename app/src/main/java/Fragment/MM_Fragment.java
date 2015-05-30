@@ -54,7 +54,7 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
     private RecyclerView.LayoutManager layoutManager;
     public int current_page = 1;
     public String url = "http://jandan.net/?oxwlxojflwblxbsapi=jandan.get_ooxx_comments&page=";
-    public List<MeiZiBean> list_meizis = new ArrayList<>();
+    public final List<MeiZiBean> list_meizis = new ArrayList<>();
     private String httpresult;
     private View mView;
     private SwipeRefreshLayout mSwipeRefreshWidget;
@@ -66,7 +66,7 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    mMyRecyclerViewAdapter = new MyRecyclerViewAdapter_MeiZi(list_meizis,current_page);
+                    mMyRecyclerViewAdapter = new MyRecyclerViewAdapter_MeiZi(list_meizis, current_page);
                     mRecyclerView.setAdapter(mMyRecyclerViewAdapter);
                     mSwipeRefreshWidget.setRefreshing(false);
                     mMyRecyclerViewAdapter.setOnItemClickListener(new MyRecyclerViewAdapter_MeiZi.OnItemClickListener() {
@@ -165,13 +165,15 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
         JSONTokener jsonParser = new JSONTokener(string);
 
         try {
+
+
             JSONObject content = (JSONObject) jsonParser.nextValue();
             current_page = content.getInt("current_page");
             JSONArray jsonObjs = content.getJSONArray("comments");
 
-            list_meizis.clear();
+            List<MeiZiBean> count_lists = new ArrayList<>();
 
-            for (int i = 0; i < jsonObjs.length(); i++) {
+            for (int i = 0; i < 11; i++) {
                 JSONObject jsonObj = ((JSONObject) jsonObjs.opt(i));
                 String title = jsonObj.getString("comment_author");
                 String time = jsonObj.getString("comment_date_gmt");
@@ -191,9 +193,14 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
                 meiZiBean.setTime(time);
                 meiZiBean.setTitle(title);
                 meiZiBean.setBitmap_meizi(GetBitmapForUrl(bitmap_url));
+                // list_meizis.add(meiZiBean);
+                count_lists.add(meiZiBean);
 
-                list_meizis.add(meiZiBean);
             }
+            list_meizis.clear();
+            list_meizis.addAll(count_lists);
+            count_lists.clear();
+
 
         } catch (JSONException e) {
             e.printStackTrace();

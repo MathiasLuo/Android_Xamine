@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.TextView;
 
+import exam.luowuxia.me.android_xamine.R;
+
 
 public class Joke_Activity extends ActionBarActivity {
     TextView tv_title, tv_time, tv_content;

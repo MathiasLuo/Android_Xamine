@@ -1,15 +1,19 @@
 package exam.luowuxia.me.android_xamine;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +23,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.util.EntityUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +59,27 @@ public class MainActivity extends ActionBarActivity {
     private MM_Fragment mm_fragment;
     private MyShow_Fragment myShow_fragment;
     private ViewPagerAdapter mViewPagerAdapter;
+    private String httpresult;
+    private String apkURL;
+    public final static String UL = "http://hongyan.cqupt.edu.cn/app/cyxbsAppUpdate.xml";
 
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    Intent updateIntent =new Intent(MainActivity.this, MyService.class);
+                    updateIntent.putExtra("url",apkURL);
+                    startService(updateIntent);
+                    break;
+                case 2:
+                    Toast.makeText(MainActivity.this,
+                            "网络请求出错,请检查网络设置", Toast.LENGTH_LONG).show();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +125,7 @@ public class MainActivity extends ActionBarActivity {
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), fragments_list);
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.setCurrentItem(0);
+        mViewPager.setOffscreenPageLimit(2);
         //绑定监听器
         mViewPager.setOnPageChangeListener(new MyOnPageChangeListener());
     }
@@ -129,6 +168,7 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            new Xml_NetThread().start();
             return true;
         }
 
@@ -196,6 +236,100 @@ public class MainActivity extends ActionBarActivity {
             mViewPager.setCurrentItem(index);
         }
 
+    }
+
+
+    class Xml_NetThread extends Thread {
+        @Override
+        public void run() {
+            super.run();
+            //网络请求的初始化
+            HttpClient mHttpClient = new DefaultHttpClient();
+            HttpGet mHttp = new HttpGet(UL);
+            HttpConnectionParams.setConnectionTimeout(mHttpClient.getParams(), 10000);
+            HttpConnectionParams.setSoTimeout(mHttpClient.getParams(), 10000);
+
+            try {
+                HttpResponse response = mHttpClient.execute(mHttp); // 执行请求，获取响应结果
+                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) { // 响应通过
+                    httpresult = EntityUtils.toString(response.getEntity(),
+                            "UTF-8");
+                    //解析xml
+                    XmlPull(StringTOInputStream(httpresult));
+                    //回调ui线程
+                    Message message = new Message();
+                    message.what = 1;
+                    handler.sendMessage(message);
+
+                } else {
+                    // 响应未通过
+                    Message message = new Message();
+                    message.what = 2;
+                    handler.sendMessage(message);
+                }
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void XmlPull(InputStream inputStream) {
+        XmlPullParser parser = Xml.newPullParser();
+
+        try {
+            parser.setInput(inputStream, "UTF-8");
+
+            int event = parser.getEventType();
+
+            while (event != XmlPullParser.END_DOCUMENT) // 文档结束
+            {
+                // 节点名称
+                String nodeName = parser.getName();
+                switch (event) {
+                    case XmlPullParser.START_DOCUMENT: // 文档开始
+
+                        break;
+                    case XmlPullParser.START_TAG: // 标签开始
+                        if ("versionCode".equals(nodeName)) {
+                            Log.e("===========>>>>>>>>>>>>", parser.nextText());
+                        }
+                        if ("versionName".equals(nodeName)) {
+                            Log.e("===========>>>>>>>>>>>>", parser.nextText());
+                        }
+                        if ("updateContent".equals(nodeName)) {
+                            Log.e("===========>>>>>>>>>>>>", parser.nextText());
+                        }
+                        if ("apkURL".equals(nodeName)) {
+                           // Log.e("===========>>>>>>>>>>>>", parser.nextText());
+                            apkURL = parser.nextText();
+                        }
+                        break;
+                    case XmlPullParser.END_TAG: // 标签结束
+                        if ("person".equals(nodeName)) {
+
+                        }
+                        break;
+                }
+                event = parser.next(); // 下一个标签
+            }
+
+
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static InputStream StringTOInputStream(String in) throws Exception {
+
+        ByteArrayInputStream is = new ByteArrayInputStream(in.getBytes("ISO-8859-1"));
+        return is;
     }
 
 }

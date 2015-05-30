@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Bean.JokeBean;
-import exam.luowuxia.me.android_xamine.BitmapActivity;
 import exam.luowuxia.me.android_xamine.Joke_Activity;
 import exam.luowuxia.me.android_xamine.MyRecyclerViewAdapter_Joke;
 import exam.luowuxia.me.android_xamine.R;
@@ -140,11 +139,17 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onRefresh() {
         if (current_page == 1) {
-            Toast.makeText(getActivity(),
-                    "当前是第一页,返回不了。", Toast.LENGTH_LONG).show();
-            mSwipeRefreshWidget.setRefreshing(false);
-            //滚动到列首部--->这是一个很方便的api，可以滑动到指定位置
-            mRecyclerView.scrollToPosition(0);
+
+            if (list_jokes.size() > 0) {
+                Toast.makeText(getActivity(),
+                        "当前是第一页,返回不了。", Toast.LENGTH_LONG).show();
+                mSwipeRefreshWidget.setRefreshing(false);
+                //滚动到列首部--->这是一个很方便的api，可以滑动到指定位置
+                mRecyclerView.scrollToPosition(0);
+            } else {
+                current_page = 1;
+                new Joke_NetThread().start();
+            }
         } else {
 
             current_page = current_page - 1;
@@ -198,7 +203,7 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
             current_page = content.getInt("current_page");
             JSONArray jsonObjs = content.getJSONArray("comments");
 
-            list_jokes.clear();
+            List<JokeBean> count_list = new ArrayList<>();
 
             for (int i = 0; i < jsonObjs.length(); i++) {
                 JSONObject jsonObj = ((JSONObject) jsonObjs.opt(i));
@@ -220,10 +225,11 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 mJokeBean.setTitle(title);
                 mJokeBean.setContent(content_c);
                 mJokeBean.setText_content(text_content);
-
-
-                list_jokes.add(mJokeBean);
+                count_list.add(mJokeBean);
             }
+            list_jokes.clear();
+            list_jokes.addAll(count_list);
+            count_list.clear();
 
         } catch (JSONException e) {
             e.printStackTrace();
