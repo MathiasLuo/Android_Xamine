@@ -51,14 +51,7 @@ public class MyService extends Service {
     //创建通知
     public void CreateInform() {
         //定义一个PendingIntent，当用户点击通知时，跳转到某个Activity(也可以发送广播等)
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        try {
-            getFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        intent.setDataAndType(Uri.fromFile(new File(filepath)),
-                "application/vnd.android.package-archive");
+        Intent intent = new Intent();
         pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         //创建一个通知
         notification = new Notification(R.drawable.abc_ic_go_search_api_mtrl_alpha, "开始下载~~", System.currentTimeMillis());
@@ -105,6 +98,12 @@ public class MyService extends Service {
                 if (downnum == length) {
                     notification.setLatestEventInfo(context, "已下载完成掌上重邮~", "点击安装", pendingIntent);
                     nManager.notify(100, notification);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setDataAndType(Uri.fromFile(new File(filepath)),
+                            "application/vnd.android.package-archive");
+                    context.startActivity(intent);
+                    nManager.cancelAll();
                 }
             }
             inputStream.close();
