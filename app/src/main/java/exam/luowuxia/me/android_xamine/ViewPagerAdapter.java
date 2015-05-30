@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -18,19 +19,18 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         this.fragments = fragments;
     }
 
+
     @Override
     public Fragment getItem(int i) {
         return fragments.get(i);
     }
+
 
     @Override
     public int getCount() {
         return fragments.size();
     }
 
-    @Override
-    public boolean isViewFromObject(View view, Object o) {
-        return false;
-    }
+
 
 }

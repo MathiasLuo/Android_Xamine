@@ -20,7 +20,7 @@
         android:layout_width="fill_parent"
         android:layout_height="42dp"
         android:layout_below="@+id/toolbar"
-        android:background="#ff73ffdb">
+        android:background="#ff99ffdb">
 
         <TextView
             android:id="@+id/text1"
@@ -29,8 +29,8 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="漂亮MM"
-            android:textColor="#ff4268ff"
-            android:textSize="20.0dp" />
+            android:textColor="#ff5facff"
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/text2"
@@ -39,8 +39,8 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="幽默DZ"
-            android:textColor="#ff4268ff"
-            android:textSize="20.0dp" />
+            android:textColor="#ff5facff"
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/text3"
@@ -49,27 +49,25 @@
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="无脑DI"
-            android:textColor="#ff4268ff"
-            android:textSize="20.0dp" />
+            android:textColor="#ff5facff"
+            android:textSize="18dp" />
     </LinearLayout>
 
     <ImageView
+
         android:id="@+id/cursor"
         android:layout_width="fill_parent"
         android:layout_height="6dp"
-        android:scaleType="matrix"
         android:layout_alignBottom="@+id/linearLayout1"
         android:background="#ff73ffdb"
+        android:scaleType="matrix"
         android:src="@drawable/pic_butt" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/cursor"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="119dp">
+        android:layout_below="@+id/linearLayout1">
 
     </android.support.v4.view.ViewPager>
 </RelativeLayout>

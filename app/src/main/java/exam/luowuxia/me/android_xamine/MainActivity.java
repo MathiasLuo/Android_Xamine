@@ -1,6 +1,7 @@
 package exam.luowuxia.me.android_xamine;
 
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,6 +51,13 @@ public class MainActivity extends ActionBarActivity {
         InitImageView();
         setSupportActionBar(mToolbar);
         initViewPager();
+        //初始化标题栏
+        SetTeView();
+        textView1.setTextColor(Color.parseColor("#FF1616FF"));
+        textView1.setTextSize(18);
+
+
+        Toast.makeText(MainActivity.this, "正在下载图片,请稍等哟！", Toast.LENGTH_LONG).show();
 
     }
 
@@ -99,6 +107,15 @@ public class MainActivity extends ActionBarActivity {
         imageView.setImageMatrix(matrix);
     }
 
+    private void SetTeView() {
+        textView1.setTextColor(Color.parseColor("#ff5facff"));
+        textView2.setTextColor(Color.parseColor("#ff5facff"));
+        textView3.setTextColor(Color.parseColor("#ff5facff"));
+        textView1.setTextSize(16);
+        textView2.setTextSize(16);
+        textView3.setTextSize(16);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,6 +161,25 @@ public class MainActivity extends ActionBarActivity {
             animation.setDuration(300);
             imageView.startAnimation(animation);
             Toast.makeText(MainActivity.this, "您选择了" + mViewPager.getCurrentItem() + "页卡", Toast.LENGTH_SHORT).show();
+
+            SetTeView();
+
+            switch (arg0) {
+                case 0:
+                    textView1.setTextColor(Color.parseColor("#FF1616FF"));
+                    textView1.setTextSize(18);
+                    break;
+                case 1:
+                    textView2.setTextColor(Color.parseColor("#FF1616FF"));
+                    textView2.setTextSize(18);
+                    break;
+
+                case 2:
+                    textView3.setTextSize(18);
+                    textView3.setTextColor(Color.parseColor("#FF1616FF"));
+                    break;
+            }
+
 
         }
 
