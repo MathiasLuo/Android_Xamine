@@ -31,6 +31,7 @@ public class MyShow_Fragment extends android.support.v4.app.Fragment {
         insert_students();
         insert_Course();
         insert_Choose();
+        ex_jisuanji();
     }
 
     @Override
@@ -218,6 +219,23 @@ public class MyShow_Fragment extends android.support.v4.app.Fragment {
             mTextView.setText("没有该名学生");
         }
 
+    }
+
+
+    public void ex_jisuanji() {
+        Cursor cursor_student = mSqLiteDatabase.query("Student", null, "College=?", new String[]{"计算机学院"}, null, null, null);
+        while (cursor_student.moveToNext()) {
+            String name = cursor_student.getString(cursor_student.getColumnIndex("Name"));
+            int age = cursor_student.getInt(cursor_student.getColumnIndex("Age"));
+            re_jisuanji(name, age);
+        }
+
+    }
+
+    public void re_jisuanji(String name, int age) {
+        ContentValues values = new ContentValues();
+        values.put("Age", age + 2);
+        mSqLiteDatabase.update("Student", values, "Name=?", new String[]{name});
     }
 
 
