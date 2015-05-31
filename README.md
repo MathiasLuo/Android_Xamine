@@ -3,7 +3,7 @@
 ###不知道如何展示sql  就贴贴代码吧。
 ###为了方便手机上的测试，我就每次都添加一下数据
 
-##第一个SQL的辅助类，里面创建了数据表。
+###第一个SQL的辅助类，里面创建了数据表。
 
     import android.content.Context;
     import android.database.sqlite.SQLiteDatabase;
@@ -41,5 +41,18 @@
 
 
 
-    ##然后就是操作的类了,由于写在了Fragment里面,所以我就只贴重要代码了。（对sql语句并不是很熟悉，所以就用android中的）。
+    ###然后就是操作的类了,由于写在了Fragment里面,所以我就只贴重要代码了。（对sql语句并不是很熟悉，所以就用android中的）。
 
+     首先在`onCreate()`中生产`mSqLiteDatabase`,然后向表中加入数据。
+     mSqlHelper = new SQLHelper(getActivity(), SQLHelper.MYDATANAME, null, SQLHelper.VERSION);
+            mSqLiteDatabase = mSqlHelper.getWritableDatabase();
+            insert_students();
+            insert_Course();
+            insert_Choose();
+     加入数据的方式也采用的android里面的`insert()`,向表中假数据的方式也都差不多,所以就贴一下。
+         ContentValues value_student_1 = new ContentValues();
+                value_student_1.put("SNO", "S00001");
+                value_student_1.put("Name", "张三");
+                value_student_1.put("Age", 20);
+                value_student_1.put("College", "计算机学院");
+                mSqLiteDatabase.insert("Student", null, value_student_1);
