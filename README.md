@@ -39,11 +39,7 @@
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         }
 
-
-
-
-
-    ###然后就是操作的类了,由于写在了Fragment里面,所以我就只贴重要代码了。（对sql语句并不是很熟悉，所以就用android中的）。
+      ###然后就是操作的类了,由于写在了Fragment里面,所以我就只贴重要代码了。（对sql语句并不是很熟悉，所以就用android中的）。
 
      首先在`onCreate()`中生产`mSqLiteDatabase`,然后向表中加入数据。
      mSqlHelper = new SQLHelper(getActivity(), SQLHelper.MYDATANAME, null, SQLHelper.VERSION);
