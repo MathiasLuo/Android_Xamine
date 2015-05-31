@@ -195,7 +195,7 @@ public class MainActivity extends ActionBarActivity {
 
 
             Animation animation = new TranslateAnimation(one * currIndex, one * arg0, 0, 0);
-            Log.e("================>>>>>", one + "\n" + two);
+            Log.d("================>>>>>", one + "\n" + two);
             currIndex = arg0;
             animation.setFillAfter(true);
             animation.setDuration(300);
@@ -294,13 +294,13 @@ public class MainActivity extends ActionBarActivity {
                         break;
                     case XmlPullParser.START_TAG: // 标签开始
                         if ("versionCode".equals(nodeName)) {
-                            Log.e("===========>>>>>>>>>>>>", parser.nextText());
+                            Log.d("===========>>>>>>>>>>>>", parser.nextText());
                         }
                         if ("versionName".equals(nodeName)) {
-                            Log.e("===========>>>>>>>>>>>>", parser.nextText());
+                            Log.d("===========>>>>>>>>>>>>", parser.nextText());
                         }
                         if ("updateContent".equals(nodeName)) {
-                            Log.e("===========>>>>>>>>>>>>", parser.nextText());
+                            Log.d("===========>>>>>>>>>>>>", parser.nextText());
                         }
                         if ("apkURL".equals(nodeName)) {
                             // Log.e("===========>>>>>>>>>>>>", parser.nextText());

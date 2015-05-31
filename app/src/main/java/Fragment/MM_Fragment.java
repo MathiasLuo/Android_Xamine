@@ -77,7 +77,7 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
                             startActivity(intent);
                         }
                     });
-                    Log.e("===================>>>>>>>>", list_meizis.size() + "");
+                    Log.d("===================>>>>>>>>", list_meizis.size() + "");
                     break;
                 case 2:
                     Toast.makeText(getActivity(),
@@ -127,7 +127,7 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
                         && mlastVisibleItem + 1 == mMyRecyclerViewAdapter.getItemCount()) {
                     mSwipeRefreshWidget.setRefreshing(true);
                     // 此处在现实项目中，请换成网络请求数据代码，sendRequest .....
-                    Log.e("=============id", mlastVisibleItem + "mlastVisibleItem");
+                    Log.d("=============id", mlastVisibleItem + "mlastVisibleItem");
                     current_page += 1;
                     new MeiZi_NetThread().start();
                 }
@@ -182,7 +182,7 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
                 JSONArray bitmap_urls = jsonObj.getJSONArray("pics");
                 String bitmap_url = bitmap_urls.getString(0);
                 String tucao = jsonObj.getString("comment_approved");
-                Log.e("======================>>>>>>>>>>",
+                Log.d("======================>>>>>>>>>>",
                         "\n" + title + "\n" + time + "\n" + bitmap_url + "\n" + dianzhan + "\n" + chaping + "\n" + tucao + "\n");
 
                 MeiZiBean meiZiBean = new MeiZiBean();

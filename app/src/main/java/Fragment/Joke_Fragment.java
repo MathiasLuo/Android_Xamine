@@ -61,7 +61,7 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     myRecyclerViewAdapter_joke = new MyRecyclerViewAdapter_Joke(list_jokes, current_page);
                     mRecyclerView.setAdapter(myRecyclerViewAdapter_joke);
                     mSwipeRefreshWidget.setRefreshing(false);
-                    Log.e("===================>>>>>>>>", list_jokes.size() + "");
+                    Log.d("===================>>>>>>>>", list_jokes.size() + "");
                     myRecyclerViewAdapter_joke.setOnItemClickListener(new MyRecyclerViewAdapter_Joke.OnItemClickListener() {
                         @Override
                         public void OnItemClick(View view, JokeBean data) {
@@ -112,7 +112,7 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         && mlastVisibleItem + 1 == myRecyclerViewAdapter_joke.getItemCount()) {
                     mSwipeRefreshWidget.setRefreshing(true);
                     // 此处在现实项目中，请换成网络请求数据代码，sendRequest .....
-                    Log.e("=============id", mlastVisibleItem + "mlastVisibleItem");
+                    Log.d("=============id", mlastVisibleItem + "mlastVisibleItem");
                     current_page += 1;
                     new Joke_NetThread().start();
                 }
@@ -214,7 +214,7 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 String tucao = jsonObj.getString("comment_approved");
                 String content_c = jsonObj.getString("comment_content");
                 String text_content = jsonObj.getString("text_content");
-                Log.e("======================>>>>>>>>>>",
+                Log.d("======================>>>>>>>>>>",
                         "\n" + title + "\n" + time + "\n" + text_content + "\n" + dianzhan + "\n" + chaping + "\n" + tucao + "\n" + content_c + "\n");
 
                 JokeBean mJokeBean = new JokeBean();
