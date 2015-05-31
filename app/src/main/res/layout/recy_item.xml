@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="18dp"
         android:text="title"
-        android:textColor="@color/hint_foreground_material_light"
+        android:textColor="#000000"
         android:textSize="25sp" />
 
     <TextView
@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dp"
+        android:textColor="@color/hint_foreground_material_light"
         android:layout_alignBottom="@+id/item_title_joke"
         android:layout_toEndOf="@+id/item_title_joke"
         android:layout_toRightOf="@+id/item_title_joke"
@@ -30,14 +31,14 @@
     <TextView
         android:id="@+id/item_text_joke"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/item_title_joke"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="26dp"
         android:layout_marginRight="26dp"
         android:text="这里是任荣"
         android:textColor="#000000"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -14,8 +14,8 @@
         android:id="@+id/edit_my"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
         android:layout_marginTop="40dp"
         android:hint="输入查询或删除学生的姓名" />
 
