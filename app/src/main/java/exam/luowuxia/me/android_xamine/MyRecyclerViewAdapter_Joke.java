@@ -70,7 +70,7 @@ public class MyRecyclerViewAdapter_Joke extends RecyclerView.Adapter<RecyclerVie
             ((MyViewHolder) holder).tv_dianzhan.setText(datas.get(position).getDianzhan());
             ((MyViewHolder) holder).tv_chaping.setText(datas.get(position).getChaping());
 
-            ((MyViewHolder) holder).item_text_joke.setText("   " + datas.get(position).getText_content());
+            ((MyViewHolder) holder).item_text_joke.setText("     " + datas.get(position).getText_content());
 
         }
 

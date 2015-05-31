@@ -14,20 +14,26 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
+
+        </activity>
+        <activity
+            android:name=".BitmapActivity"
+            android:label="@string/title_activity_bitmap" />
+        <activity
+            android:name=".Joke_Activity"
+            android:label="@string/title_activity_joke_" />
+
+        <service android:name=".MyService" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".BitmapActivity"
-            android:label="@string/title_activity_bitmap"></activity>
-        <activity
-            android:name=".Joke_Activity"
-            android:label="@string/title_activity_joke_"></activity>
-
-        <service android:name=".MyService"></service>
     </application>
 
 </manifest>

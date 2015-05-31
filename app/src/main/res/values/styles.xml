@@ -6,7 +6,7 @@
         <!-- toolbar（actionbar）颜色 -->
         <item name="colorPrimary">#ff99ffdb</item>
         <!-- 状态栏颜色 -->
-        <item name="colorPrimaryDark">#ff91ffc9</item>
+        <item name="colorPrimaryDark">#ff99ffdb</item>
         <!-- 窗口的背景颜色 -->
         <item name="android:windowBackground">@android:color/white</item>
 
