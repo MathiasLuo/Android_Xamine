@@ -4,7 +4,7 @@
 ###为了方便手机上的测试，我就每次都添加一下数据
 
 ##第一个SQL的辅助类，里面创建了数据表。
-‘
+`
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -38,7 +38,8 @@ public class SQLHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
-’
+    `
+
 
     ##然后就是操作的类了,由于写在了Fragment里面,所以我就只贴重要代码了。（对sql语句并不是很熟悉，所以就用android中的）。
 
