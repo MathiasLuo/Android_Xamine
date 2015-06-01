@@ -19,24 +19,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +43,6 @@ import exam.luowuxia.me.android_xamine.MyRecyclerViewAdapter_MeiZi;
 import exam.luowuxia.me.android_xamine.R;
 
 public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-
 
     private int count = 0;
     private int mlastVisibleItem;
@@ -69,6 +64,32 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
                     mMyRecyclerViewAdapter = new MyRecyclerViewAdapter_MeiZi(list_meizis, current_page);
                     mRecyclerView.setAdapter(mMyRecyclerViewAdapter);
                     mSwipeRefreshWidget.setRefreshing(false);
+                    if (current_page == 1) {
+                        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                            @Override
+                            public void onScrollStateChanged(RecyclerView recyclerView,
+                                                             int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                                        && mlastVisibleItem + 1 == mMyRecyclerViewAdapter.getItemCount()) {
+                                    mSwipeRefreshWidget.setRefreshing(true);
+                                    // 此处在现实项目中，请换成网络请求数据代码，sendRequest .....
+                                    Log.d("=============id", mlastVisibleItem + "mlastVisibleItem");
+                                    current_page += 1;
+                                    new MeiZi_NetThread().start();
+                                }
+                            }
+
+                            @Override
+                            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+                                mlastVisibleItem = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+
+                            }
+                        });
+                    }
+
                     mMyRecyclerViewAdapter.setOnItemClickListener(new MyRecyclerViewAdapter_MeiZi.OnItemClickListener() {
                         @Override
                         public void OnItemClick(View view, MeiZiBean data) {
@@ -81,7 +102,8 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
                     break;
                 case 2:
                     Toast.makeText(getActivity(),
-                            "网络请求出错,请检查网络设置", Toast.LENGTH_LONG).show();
+                            "妹子网络请求出错,请检查网络设置", Toast.LENGTH_LONG).show();
+                    mSwipeRefreshWidget.setRefreshing(false);
                     break;
             }
 
@@ -117,6 +139,7 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -148,8 +171,8 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
     public void onRefresh() {
         if (current_page == 1) {
             Toast.makeText(getActivity(),
-                    "当前是第一页,返回不了。", Toast.LENGTH_LONG).show();
-            mSwipeRefreshWidget.setRefreshing(false);
+                    "正在刷新", Toast.LENGTH_SHORT).show();
+            new MeiZi_NetThread().start();
             //滚动到列首部--->这是一个很方便的api，可以滑动到指定位置
             mRecyclerView.scrollToPosition(0);
         } else {
@@ -242,7 +265,7 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
     class MeiZi_NetThread extends Thread {
         @Override
         public void run() {
-            //网络请求的初始化
+            /*//网络请求的初始化
             HttpClient mHttpClient = new DefaultHttpClient();
             HttpGet mHttp = new HttpGet(url + current_page);
             HttpConnectionParams.setConnectionTimeout(mHttpClient.getParams(), 10000);
@@ -250,6 +273,7 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
 
             try {
                 HttpResponse response = mHttpClient.execute(mHttp); // 执行请求，获取响应结果
+                Log.e("响应未通过", "响应未通过" + response.getStatusLine().getStatusCode() + "\n" + url + current_page);
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) { // 响应通过
                     httpresult = EntityUtils.toString(response.getEntity(),
                             "UTF-8");
@@ -260,6 +284,7 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
                     handler.sendMessage(message);
 
                 } else {
+                    Log.e("响应未通过", "响应未通过");
                     // 响应未通过
                     Message message = new Message();
                     message.what = 2;
@@ -271,7 +296,58 @@ public class MM_Fragment extends Fragment implements SwipeRefreshLayout.OnRefres
                 e.printStackTrace();
             }
         }
+    }*/
+            HttpURLConnection connection = null;
+            try {
+                URL url_con = new URL(url + current_page);
+                connection = (HttpURLConnection) url_con.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setConnectTimeout(10000);
+                connection.setReadTimeout(10000);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                InputStream in = connection.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in, "GBK"));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                httpresult = response.toString();
+                Parse_httpresult(httpresult);
+                Message message = new Message();
+                message.what = 1;
+                handler.sendMessage(message);
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                // 响应未通过
+                Message message = new Message();
+                message.what = 2;
+                handler.sendMessage(message);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                // 响应未通过
+                Message message = new Message();
+                message.what = 2;
+                handler.sendMessage(message);
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+                // 响应未通过
+                Message message = new Message();
+                message.what = 2;
+                handler.sendMessage(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+                // 响应未通过
+                Message message = new Message();
+                message.what = 2;
+                handler.sendMessage(message);
+            }
+
+
+        }
+
+
     }
-
-
 }

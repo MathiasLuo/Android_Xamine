@@ -67,7 +67,7 @@ public class MyRecyclerViewAdapter_MeiZi extends RecyclerView.Adapter<RecyclerVi
             );
 
             ((MyViewHolder) holder).tv_time.setText(datas.get(position).getTime());
-            ((MyViewHolder) holder).tv_tucao.setText("吐槽："+datas.get(position).tucao);
+            ((MyViewHolder) holder).tv_tucao.setText("吐槽：" + datas.get(position).tucao);
             ((MyViewHolder) holder).tv_title.setText(datas.get(position).getTitle());
             ((MyViewHolder) holder).tv_dianzhan.setText(datas.get(position).getDianzhan());
             ((MyViewHolder) holder).tv_chaping.setText(datas.get(position).getChaping());
@@ -137,7 +137,7 @@ public class MyRecyclerViewAdapter_MeiZi extends RecyclerView.Adapter<RecyclerVi
             super(view);
 
             TextView tv = (TextView) view.findViewById(R.id.tt);
-            tv.setText("当前第 "+currount +" 页"+"\n正在加载下一页......");
+            tv.setText("当前第 " + currount + " 页" + "\n正在加载下一页......");
         }
 
     }

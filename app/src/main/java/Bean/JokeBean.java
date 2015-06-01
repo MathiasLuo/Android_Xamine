@@ -9,7 +9,7 @@ public class JokeBean {
     public String dianzhan;
     public String chaping;
     public String tucao;
-    public  String content;
+    public String content;
 
     public String getText_content() {
         return text_content;

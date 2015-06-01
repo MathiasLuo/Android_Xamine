@@ -17,20 +17,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +61,32 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     myRecyclerViewAdapter_joke = new MyRecyclerViewAdapter_Joke(list_jokes, current_page);
                     mRecyclerView.setAdapter(myRecyclerViewAdapter_joke);
                     mSwipeRefreshWidget.setRefreshing(false);
-                    Log.d("===================>>>>>>>>", list_jokes.size() + "");
+                    Log.e("===================>>>>>>>>", list_jokes.size() + "");
+                    if (current_page == 1){
+                        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(RecyclerView recyclerView,
+                                                         int newState) {
+                            super.onScrollStateChanged(recyclerView, newState);
+                            if (newState == RecyclerView.SCROLL_STATE_IDLE
+                                    && mlastVisibleItem + 1 == myRecyclerViewAdapter_joke.getItemCount()) {
+                                mSwipeRefreshWidget.setRefreshing(true);
+                                // 此处在现实项目中，请换成网络请求数据代码，sendRequest .....
+                                Log.e("=============id", mlastVisibleItem + "mlastVisibleItem");
+                                current_page += 1;
+                                new Joke_NetThread().start();
+                            }
+                        }
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+                            mlastVisibleItem = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+
+                        }
+                    });
+
+                    }
+
                     myRecyclerViewAdapter_joke.setOnItemClickListener(new MyRecyclerViewAdapter_Joke.OnItemClickListener() {
                         @Override
                         public void OnItemClick(View view, JokeBean data) {
@@ -76,6 +101,7 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 case 2:
                     Toast.makeText(getActivity(),
                             "网络请求出错,请检查网络设置", Toast.LENGTH_LONG).show();
+                    mSwipeRefreshWidget.setRefreshing(false);
                     break;
             }
 
@@ -102,29 +128,7 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView,
-                                             int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE
-                        && mlastVisibleItem + 1 == myRecyclerViewAdapter_joke.getItemCount()) {
-                    mSwipeRefreshWidget.setRefreshing(true);
-                    // 此处在现实项目中，请换成网络请求数据代码，sendRequest .....
-                    Log.d("=============id", mlastVisibleItem + "mlastVisibleItem");
-                    current_page += 1;
-                    new Joke_NetThread().start();
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                mlastVisibleItem = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-
-            }
-        });
     }
 
     @Override
@@ -142,8 +146,8 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             if (list_jokes.size() > 0) {
                 Toast.makeText(getActivity(),
-                        "当前是第一页,返回不了。", Toast.LENGTH_LONG).show();
-                mSwipeRefreshWidget.setRefreshing(false);
+                        "正在刷新", Toast.LENGTH_LONG).show();
+                new Joke_NetThread().start();
                 //滚动到列首部--->这是一个很方便的api，可以滑动到指定位置
                 mRecyclerView.scrollToPosition(0);
             } else {
@@ -162,7 +166,7 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         @Override
         public void run() {
             super.run();
-            //网络请求的初始化
+          /*  //网络请求的初始化
             HttpClient mHttpClient = new DefaultHttpClient();
             HttpGet mHttp = new HttpGet(url + current_page);
             HttpConnectionParams.setConnectionTimeout(mHttpClient.getParams(), 10000);
@@ -189,53 +193,100 @@ public class Joke_Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            }*/
+
+            HttpURLConnection connection = null;
+            try {
+                URL url_con = new URL(url + current_page);
+                connection = (HttpURLConnection) url_con.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setConnectTimeout(8000);
+                connection.setReadTimeout(8000);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                InputStream in = connection.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in, "GBK"));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                httpresult = response.toString();
+                Parse_httpresult(httpresult);
+                Message message = new Message();
+                message.what = 1;
+                handler.sendMessage(message);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                // 响应未通过
+                Message message = new Message();
+                message.what = 2;
+                handler.sendMessage(message);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                // 响应未通过
+                Message message = new Message();
+                message.what = 2;
+                handler.sendMessage(message);
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+                // 响应未通过
+                Message message = new Message();
+                message.what = 2;
+                handler.sendMessage(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+                // 响应未通过
+                Message message = new Message();
+                message.what = 2;
+                handler.sendMessage(message);
             }
         }
-    }
 
 
-    private void Parse_httpresult(String string) {
+        private void Parse_httpresult(String string) {
 
-        JSONTokener jsonParser = new JSONTokener(string);
+            JSONTokener jsonParser = new JSONTokener(string);
 
-        try {
-            JSONObject content = (JSONObject) jsonParser.nextValue();
-            current_page = content.getInt("current_page");
-            JSONArray jsonObjs = content.getJSONArray("comments");
+            try {
+                JSONObject content = (JSONObject) jsonParser.nextValue();
+                current_page = content.getInt("current_page");
+                JSONArray jsonObjs = content.getJSONArray("comments");
 
-            List<JokeBean> count_list = new ArrayList<>();
+                List<JokeBean> count_list = new ArrayList<>();
 
-            for (int i = 0; i < jsonObjs.length(); i++) {
-                JSONObject jsonObj = ((JSONObject) jsonObjs.opt(i));
-                String title = jsonObj.getString("comment_author");
-                String time = jsonObj.getString("comment_date_gmt");
-                String dianzhan = jsonObj.getString("vote_positive");
-                String chaping = jsonObj.getString("vote_negative");
-                String tucao = jsonObj.getString("comment_approved");
-                String content_c = jsonObj.getString("comment_content");
-                String text_content = jsonObj.getString("text_content");
-                Log.d("======================>>>>>>>>>>",
-                        "\n" + title + "\n" + time + "\n" + text_content + "\n" + dianzhan + "\n" + chaping + "\n" + tucao + "\n" + content_c + "\n");
+                for (int i = 0; i < jsonObjs.length(); i++) {
+                    JSONObject jsonObj = ((JSONObject) jsonObjs.opt(i));
+                    String title = jsonObj.getString("comment_author");
+                    String time = jsonObj.getString("comment_date_gmt");
+                    String dianzhan = jsonObj.getString("vote_positive");
+                    String chaping = jsonObj.getString("vote_negative");
+                    String tucao = jsonObj.getString("comment_approved");
+                    String content_c = jsonObj.getString("comment_content");
+                    String text_content = jsonObj.getString("text_content");
+                    Log.e("======================>>>>>>>>>>",
+                            "\n" + title + "\n" + time + "\n" + text_content + "\n" + dianzhan + "\n" + chaping + "\n" + tucao + "\n" + content_c + "\n");
 
-                JokeBean mJokeBean = new JokeBean();
-                mJokeBean.setChaping(chaping);
-                mJokeBean.setDianzhan(dianzhan);
-                mJokeBean.setTucao(tucao);
-                mJokeBean.setTime(time);
-                mJokeBean.setTitle(title);
-                mJokeBean.setContent(content_c);
-                mJokeBean.setText_content(text_content);
-                count_list.add(mJokeBean);
+                    JokeBean mJokeBean = new JokeBean();
+                    mJokeBean.setChaping(chaping);
+                    mJokeBean.setDianzhan(dianzhan);
+                    mJokeBean.setTucao(tucao);
+                    mJokeBean.setTime(time);
+                    mJokeBean.setTitle(title);
+                    mJokeBean.setContent(content_c);
+                    mJokeBean.setText_content(text_content);
+                    count_list.add(mJokeBean);
+                }
+                list_jokes.clear();
+                list_jokes.addAll(count_list);
+                count_list.clear();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            list_jokes.clear();
-            list_jokes.addAll(count_list);
-            count_list.clear();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+
     }
-
-
-}
+    }
 

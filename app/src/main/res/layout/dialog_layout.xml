@@ -11,11 +11,12 @@
         android:id="@+id/save_bitmap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="保存本地"/>
+        android:text="保存本地" />
+
     <Button
         android:layout_gravity="center"
         android:id="@+id/share_bitmap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="分享伙伴"/>
+        android:text="分享伙伴" />
 </LinearLayout>
